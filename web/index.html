@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Eating in Shanghai — map</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div class="landing" id="landing" hidden>
+  <div class="landing-card" role="dialog" aria-modal="true" aria-labelledby="landing-title">
+    <p class="landing-eyebrow" id="landing-eyebrow"></p>
+    <h1 id="landing-title">Eating in Shanghai</h1>
+
+    <p class="landing-lead">
+      An interactive map of the 53 restaurants in
+      <em id="landing-guide"></em>, by <strong id="landing-author"></strong>.
+    </p>
+
+    <div class="landing-split">
+      <section>
+        <h2>Three cities</h2>
+        <p>
+          <strong>Shanghai's 47 places</strong>, plus the Jiangnan day trips —
+          three in Suzhou, three in Hangzhou. Each is its own map; switch
+          between them at the top of the panel.
+        </p>
+      </section>
+      <section>
+        <h2>Plan a walk</h2>
+        <p>
+          <strong>Add stops from any pin.</strong> The map routes between them
+          on real walking distances, then reorders them into the shortest
+          sensible route.
+        </p>
+      </section>
+    </div>
+
+    <p class="landing-fine">
+      <span id="landing-scope"></span>
+      Three places in the guide have no address — the author does those by tour
+      only — so they are not on the map.
+      <span id="landing-builder"></span>
+    </p>
+
+    <p class="landing-buy" id="landing-buy"></p>
+
+    <button type="button" id="landing-enter" class="btn landing-btn">Open the map</button>
+  </div>
+</div>
+
+<div class="app" id="app">
+  <aside class="panel" id="panel">
+    <header class="panel-head">
+      <h1>Eating in Shanghai</h1>
+      <p class="sub">from the saintcavish guide, 2026</p>
+      <p class="count"><strong id="shown">0</strong> <span id="shown-label">places shown</span></p>
+    </header>
+
+    <!-- One city at a time. The guide's three cities are 85-175km apart and
+         the walking routes are within-city only, so they are separate maps
+         rather than one map zoomed out far enough to hold all three. -->
+    <nav class="cities" id="cities" aria-label="City"></nav>
+
+    <div class="panel-body">
+      <section class="filters" id="filters">
+        <div class="filters-head">
+          <h2>Category</h2>
+          <button type="button" id="reset" class="link-btn">Reset</button>
+        </div>
+        <ul id="categories" class="cat-list"></ul>
+      </section>
+
+      <section class="district" id="district-section">
+        <h2><label for="district-select">District</label></h2>
+        <select id="district-select"></select>
+      </section>
+
+      <section class="toggles" id="toggles">
+        <label class="toggle">
+          <input type="checkbox" id="newonly">
+          <span>
+            New in 2026 only
+            <em>the 6 additions to this edition</em>
+          </span>
+        </label>
+      </section>
+
+      <section id="walk" class="walk" hidden>
+        <div class="filters-head">
+          <h2>Your walk</h2>
+          <button type="button" id="walk-clear" class="link-btn">Clear</button>
+        </div>
+        <ol id="walk-list" class="walk-list"></ol>
+        <p id="walk-summary" class="walk-summary"></p>
+        <label class="toggle walk-focus-toggle">
+          <input type="checkbox" id="walk-only">
+          <span>
+            Only show my walk
+            <em>hides everywhere else on the map</em>
+          </span>
+        </label>
+        <div class="walk-actions">
+          <button type="button" id="walk-optimise" class="btn">Best order</button>
+        </div>
+      </section>
+
+      <section id="intro" class="intro" hidden>
+        <h3 id="intro-title"></h3>
+        <p id="intro-text"></p>
+      </section>
+
+      <!-- Shown instead of the filters in Suzhou and Hangzhou, where there are
+           three places apiece and every filter control would be degenerate. -->
+      <section id="places" class="places" hidden>
+        <h2>The places</h2>
+        <ul id="places-list" class="places-list"></ul>
+      </section>
+    </div>
+
+    <footer class="panel-foot">
+      <p id="status">Loading…</p>
+      <button type="button" id="show-about" class="link-btn foot-about">About</button>
+      <button type="button" id="toggle-theme" class="theme-btn"
+              aria-pressed="false" title="Switch to dark">
+        <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+          <circle class="sun-core" cx="8" cy="8" r="3.4"></circle>
+          <g class="sun-rays">
+            <path d="M8 .8v2M8 13.2v2M.8 8h2M13.2 8h2M2.9 2.9l1.4 1.4M11.7 11.7l1.4 1.4M13.1 2.9l-1.4 1.4M4.3 11.7l-1.4 1.4"></path>
+          </g>
+          <path class="moon" d="M13.4 9.8A5.8 5.8 0 0 1 6.2 2.6a5.8 5.8 0 1 0 7.2 7.2z"></path>
+        </svg>
+        <span class="sr-only">Switch to dark</span>
+      </button>
+    </footer>
+  </aside>
+
+  <main class="map-wrap">
+    <button type="button" id="toggle-panel" class="panel-toggle"
+            aria-controls="panel" aria-expanded="true" title="Hide the filters">
+      <span class="chev" aria-hidden="true"></span>
+      <span class="sr-only">Hide the filters</span>
+      <!-- Where a walk shows itself while the panel that holds it is shut. -->
+      <span class="walk-badge" id="walk-badge" hidden></span>
+    </button>
+    <div id="map"></div>
+  </main>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="js/config.js"></script>
+<script src="js/basemap.js"></script>
+<script src="js/map.js"></script>
+<script src="js/walk.js"></script>
+<script src="js/about.js"></script>
+</body>
+</html>

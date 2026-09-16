@@ -1,0 +1,41 @@
+# Secrets
+.env
+.amap_key
+
+# Python
+__pycache__/
+*.pyc
+
+# Raw Overpass responses, ~24MB and entirely rebuildable: delete the folder and
+# `python basemap/build_basemap.py` fetches them again. The basemap built from
+# them is OpenStreetMap's (ODbL), not the guide's, so this is bulk rather than
+# a rights question.
+basemap/cache/
+
+# --- The guide, and everything derived from it -------------------------------
+# This repo publishes the code only. The guide is Christopher St. Cavish's paid
+# work: neither the PDF nor anything extracted from it belongs in a public repo.
+# Run the pipeline against your own copy to produce these locally.
+#
+# NOTE: git history is forever. If any of these are ever committed by accident,
+# deleting them in a later commit is not enough — the blob stays in history and
+# the branch has to be rewritten.
+*.pdf
+data/*
+!data/README.md
+
+# The builds. dist/Eating-in-Shanghai.html inlines every restaurant record and,
+# in the buyer edition, the guide's prose in full -- it is the most concentrated
+# copy of his writing this repo can produce. dist/site/ carries the same data as
+# separate files. Both are rebuildable in seconds from `python build/build_dist.py`,
+# so there is no reason to track either.
+dist/
+
+# Working notes: candid, and they quote the guide directly. PLAN.md is the same
+# deal — it names the author and discusses an arrangement that is not agreed.
+NOTES.md
+PLAN.md
+
+# Share assets: screenshots contain extracts of the guide's text. Un-ignore
+# these only once the author has agreed to them appearing in the README.
+share/

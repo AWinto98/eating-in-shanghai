@@ -1,0 +1,1177 @@
+/* Tokens from the project's data-viz palette.
+   The guide leans on white space, so this page is light by design rather than
+   light-by-default: it does NOT follow prefers-color-scheme. The dark tokens
+   are kept and stay valid, but only apply when something explicitly stamps
+   <html data-theme="dark">. */
+:root {
+  color-scheme: light;
+
+  --surface-1:      #fcfcfb;
+  --page:           #f9f9f7;
+  --text-primary:   #0b0b0b;
+  --text-secondary: #52514e;
+  --text-muted:     #898781;
+  --hairline:       #e1e0d9;
+  --border:         rgba(11, 11, 11, 0.10);
+
+  /* Single accent: every pin is this colour, category is carried by the
+     filter rather than by hue. Vermilion, validated >= 3:1 against every
+     Positron tile surface (land 5.09:1, built-up 4.64:1, water 3.77:1,
+     park 4.19:1). The palette's own orange and red were rejected here --
+     both drop below 3:1 on the water and park tiles. */
+  --accent:         #c8322a;
+  --accent-ink:     #b02a23;   /* 6.39:1 on the surface, for link text */
+  --pin-ring:       #ffffff;
+  --wash:           rgba(200, 50, 42, 0.10);
+
+  --shadow: 0 1px 2px rgba(11, 11, 11, 0.06), 0 4px 16px rgba(11, 11, 11, 0.08);
+}
+
+/* Opt-in only -- deliberately NOT wired to prefers-color-scheme, so an OS set
+   to dark still gets the light page. Vermilion is re-stepped for the dark
+   surface (4.70:1 on it, 3.99:1 on the dark tiles); the light step would sit
+   at 2.78:1 there. Stamp <html data-theme="dark"> to use it. */
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --surface-1:      #1a1a19;
+  --page:           #0d0d0d;
+  --text-primary:   #ffffff;
+  --text-secondary: #c3c2b7;
+  --text-muted:     #898781;
+  --hairline:       #2c2c2a;
+  --border:         rgba(255, 255, 255, 0.10);
+  --accent:         #e0584a;
+  --accent-ink:     #e8695c;
+  --pin-ring:       #1a1a19;
+  --wash:           rgba(224, 88, 74, 0.16);
+  --shadow: 0 1px 2px rgba(0, 0, 0, 0.5), 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* --- landing ---------------------------------------------------------
+   States plainly whose work the content is, before the map is reached. */
+
+.landing {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  background: var(--page);
+  overflow-y: auto;
+}
+
+.landing[hidden] { display: none; }
+
+.landing-card {
+  width: 100%;
+  max-width: 640px;
+  padding: 34px 38px 30px;
+  border: 1px solid var(--hairline);
+  border-radius: 12px;
+  background: var(--surface-1);
+  box-shadow: var(--shadow);
+}
+
+.landing-eyebrow {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--accent-ink);
+}
+
+.landing-card h1 {
+  margin: 8px 0 0;
+  font-size: 30px;
+  letter-spacing: -0.02em;
+}
+
+.landing-lead {
+  margin: 10px 0 0;
+  font-size: 15.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.landing-lead em { font-style: italic; }
+
+.landing-split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+  margin-top: 24px;
+  padding-top: 22px;
+  border-top: 1px solid var(--hairline);
+}
+
+.landing-split h2 {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.landing-split p {
+  margin: 0 0 9px;
+  font-size: 13.5px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.landing-split strong { color: var(--text-primary); }
+
+/* The card used to give its two best panels to "Whose work is whose" and "What
+   this is not". That was right for a portfolio piece and wrong inside the
+   author's own product, where it reads as defensive rather than careful -- so
+   the space went to what the map does, which is also the part a reader cannot
+   guess by looking at it.
+
+   Two things survive here, deliberately small. The permission line stays
+   because it is the one sentence establishing the map is authorised, and it is
+   per-edition config so it can still be reworded in one line. The withheld
+   places stay because that is *information*, not a disclaimer: a reader of the
+   guide who was not told would count three places missing and assume the map
+   was broken. No border-top -- .landing-thanks already draws one just below in
+   the buyer edition, and two hairlines that close together read as clutter. */
+.landing-fine {
+  margin: 18px 0 0;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-muted);
+}
+
+.landing-fine a { color: var(--accent-ink); }
+
+.landing-buy {
+  margin: 22px 0 0;
+  font-size: 14px;
+}
+
+.landing-buy a { color: var(--accent-ink); font-weight: 600; }
+
+/* The buyer edition's replacement for the buy link: a quieter note, set to
+   read as a closing remark rather than as a call to action. */
+.landing-thanks {
+  max-width: 46ch;
+  color: var(--text-secondary);
+  font-size: 13.5px;
+  line-height: 1.55;
+  border-top: 1px solid var(--hairline);
+  padding-top: 14px;
+}
+
+.landing-missing {
+  color: var(--text-muted);
+  font-style: italic;
+  font-size: 13px;
+}
+
+.landing-missing code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--wash);
+  font-style: normal;
+  font-size: 12px;
+}
+
+.landing-btn {
+  margin-top: 18px;
+  padding: 9px 18px;
+  font-size: 14px;
+}
+
+@media (max-width: 620px) {
+  .landing-card { padding: 26px 22px 24px; }
+  .landing-split { grid-template-columns: 1fr; gap: 18px; }
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  font: 15px/1.5 system-ui, -apple-system, "Segoe UI", sans-serif;
+  color: var(--text-primary);
+  background: var(--page);
+  -webkit-font-smoothing: antialiased;
+}
+
+.app {
+  display: grid;
+  grid-template-columns: 320px 1fr;
+  height: 100%;
+  transition: grid-template-columns 220ms ease;
+}
+
+.app.collapsed { grid-template-columns: 0 1fr; }
+
+@media (prefers-reduced-motion: reduce) {
+  .app { transition: none; }
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+/* --- panel ---------------------------------------------------------- */
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+  min-width: 0;
+  background: var(--surface-1);
+  border-right: 1px solid var(--hairline);
+  overflow: hidden;
+}
+
+/* Collapsed: the column is 0 wide, so also take the panel out of the tab order
+   and stop its content reflowing into a 0px sliver on the way. */
+.app.collapsed .panel {
+  border-right-color: transparent;
+  visibility: hidden;
+}
+
+.app.collapsed .panel > * { width: 320px; }
+
+.panel-head {
+  padding: 20px 20px 16px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.panel-head h1 {
+  margin: 0;
+  font-size: 19px;
+  letter-spacing: -0.01em;
+}
+
+.sub {
+  margin: 2px 0 0;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+.count {
+  margin: 12px 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.count strong {
+  font-size: 22px;
+  color: var(--text-primary);
+  margin-right: 4px;
+}
+
+/* --- city switcher ---------------------------------------------------
+   Navigation, not a filter, so it sits above the panel body and outside the
+   area that scrolls: which city you are in should not be able to scroll away. */
+
+.cities {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding: 0 20px 12px;
+  border-bottom: 1px solid var(--hairline);
+}
+
+.city-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+  padding: 7px 9px;
+  border: 1px solid transparent;
+  border-radius: 7px;
+  background: none;
+  font: inherit;
+  color: var(--text-muted);
+  cursor: pointer;
+  text-align: left;
+}
+
+.city-btn:hover { background: var(--wash); }
+
+.city-btn[aria-pressed="true"] {
+  border-color: var(--border);
+  background: var(--surface-1);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+}
+
+.city-name { font-size: 13px; font-weight: 600; letter-spacing: -0.01em; }
+
+.city-count {
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-muted);
+}
+
+.city-btn[aria-pressed="true"] .city-count { color: var(--accent-ink); }
+
+.panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 16px 20px 20px;
+}
+
+/* --- the small cities ------------------------------------------------
+   Suzhou and Hangzhou have three places each, all Jiangnan, so they get the
+   guide's section intro and a list instead of filter controls that could not
+   change what is on screen. */
+
+.places { margin-top: 4px; }
+
+.places-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.place-btn {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  width: 100%;
+  padding: 9px 8px;
+  margin: 0 -8px;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.place-btn:hover { background: var(--wash); }
+
+.place-name { font-size: 14px; }
+
+.place-where {
+  flex: none;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.filters-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+
+/* Scoped to the panel -- an unscoped h2 rule also caught the popup title and
+   rendered restaurant names as muted uppercase. */
+.panel h2 {
+  margin: 0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+.link-btn {
+  border: 0;
+  padding: 0;
+  background: none;
+  font: inherit;
+  font-size: 12px;
+  color: var(--accent-ink);
+  cursor: pointer;
+}
+
+.link-btn:hover { text-decoration: underline; }
+
+.cat-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* The legend is the filter — each row is a checkbox, so identity is never
+   carried by colour alone. */
+.cat-list label {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 6px 8px;
+  margin: 0 -8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.cat-list label:hover { background: var(--wash); }
+
+.cat-list input { margin: 0; accent-color: var(--accent); }
+
+.cat-name { flex: 1; }
+
+.cat-count {
+  font-variant-numeric: tabular-nums;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.cat-list li.off .cat-name,
+.cat-list li.off .cat-count { color: var(--text-muted); }
+
+.cat-list li.empty .cat-name { text-decoration: line-through; }
+
+.district {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+}
+
+.district h2 { margin-bottom: 7px; }
+
+.district select {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--page);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 13.5px;
+}
+
+.district select:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.toggles {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+  display: grid;
+  gap: 10px;
+}
+
+.toggle {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.toggle input { margin: 3px 0 0; accent-color: var(--accent); }
+
+.toggle em {
+  display: block;
+  font-style: normal;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* --- the walk ------------------------------------------------------- */
+
+.walk {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+}
+
+.walk-list {
+  list-style: none;
+  margin: 8px 0 0;
+  padding: 0;
+}
+
+.walk-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  margin: 0 -6px;
+  border-radius: 6px;
+  font-size: 13.5px;
+}
+
+.walk-row:hover { background: var(--wash); }
+
+.walk-n {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.walk-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.walk-ctl { flex: none; display: flex; gap: 1px; opacity: 0; }
+
+.walk-row:hover .walk-ctl,
+.walk-ctl:focus-within { opacity: 1; }
+
+.walk-ctl button {
+  width: 20px;
+  height: 20px;
+  padding: 0;
+  border: 0;
+  border-radius: 4px;
+  background: none;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: 12px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.walk-ctl button:hover:not(:disabled) {
+  background: var(--surface-1);
+  color: var(--accent-ink);
+}
+
+.walk-ctl button:disabled { opacity: 0.3; cursor: default; }
+
+/* The connector between two stops, carrying that leg's distance and time. */
+.walk-hop {
+  margin: 0;
+  padding: 2px 0 2px 8px;
+  border-left: 2px solid var(--hairline);
+  margin-left: 8px;
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.walk-hidden {
+  margin: 1px 0 0 32px;
+  font-size: 11.5px;
+  font-style: italic;
+  color: var(--text-muted);
+}
+
+.walk-summary {
+  margin: 10px 0 0;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+
+.walk-summary.busy { color: var(--text-muted); }
+.walk-summary.error { color: var(--accent-ink); font-style: italic; }
+
+.walk-focus-toggle { margin-top: 11px; }
+
+.walk-actions { margin-top: 11px; }
+
+/* While the walk is focused the filters genuinely do not apply, so they are
+   dimmed and made inert rather than left sitting there looking live. */
+.panel.walk-focus #filters,
+.panel.walk-focus #district-section,
+.panel.walk-focus #toggles {
+  opacity: 0.38;
+  transition: opacity 160ms ease;
+}
+
+.btn {
+  padding: 6px 11px;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  background: var(--page);
+  color: var(--text-primary);
+  font: inherit;
+  font-size: 12.5px;
+  cursor: pointer;
+}
+
+.btn:hover:not(:disabled) {
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+
+/* Reads as a state rather than a call to action: the stop is already in the
+   walk, and the next press takes it back out. */
+.btn.in-walk {
+  border-color: var(--accent);
+  background: var(--wash);
+  color: var(--accent-ink);
+  font-weight: 600;
+}
+
+.btn.btn-warn { border-color: var(--accent); color: var(--accent-ink); }
+
+.btn:disabled { opacity: 0.45; cursor: default; }
+
+.btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* A pin that is in the walk, and one hovered from the itinerary list. */
+.pin.pin-on .pin-body { stroke: var(--text-primary); stroke-width: 2.2; }
+.pin.pin-lit svg { transform: scale(1.35); }
+.pin.pin-lit { z-index: 800 !important; }
+
+.pop-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 11px 0 0;
+}
+
+.pop-link { font-size: 12.5px; color: var(--accent-ink); }
+
+.intro {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid var(--hairline);
+}
+
+.intro h3 {
+  margin: 0 0 6px;
+  font-size: 13px;
+}
+
+.intro p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-secondary);
+}
+
+.panel-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 12px 8px 20px;
+  border-top: 1px solid var(--hairline);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.panel-foot p { margin: 0; }
+
+.panel-foot a { color: var(--accent-ink); }
+
+/* Deliberately quiet: muted until hovered, so it sits with the status line
+   rather than competing with the filters. */
+.theme-btn {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 0;
+  border-radius: 6px;
+  background: none;
+  color: var(--text-muted);
+  cursor: pointer;
+}
+
+.theme-btn:hover {
+  background: var(--wash);
+  color: var(--accent-ink);
+}
+
+.theme-btn:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 1px;
+}
+
+.theme-btn svg {
+  width: 15px;
+  height: 15px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.4;
+  stroke-linecap: round;
+}
+
+/* The icon shows what the click gives you, not the current state: a moon while
+   the page is light, a sun once it is dark. */
+.theme-btn .sun-core,
+.theme-btn .sun-rays { display: none; }
+
+.theme-btn .moon { display: block; }
+
+:root[data-theme="dark"] .theme-btn .moon { display: none; }
+
+:root[data-theme="dark"] .theme-btn .sun-core,
+:root[data-theme="dark"] .theme-btn .sun-rays { display: block; }
+
+/* --- map ------------------------------------------------------------ */
+
+.map-wrap { position: relative; min-width: 0; }
+
+/* Sits just inside the map's left edge, so it stays put whether the panel is
+   open or shut and never collides with Leaflet's zoom control (top-left). */
+.panel-toggle {
+  position: absolute;
+  z-index: 600;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 46px;
+  padding: 0;
+  border: 1px solid var(--border);
+  border-left: 0;
+  border-radius: 0 7px 7px 0;
+  background: var(--surface-1);
+  box-shadow: var(--shadow);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+
+.panel-toggle:hover { background: var(--wash); }
+
+.panel-toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
+
+.chev {
+  width: 7px;
+  height: 7px;
+  border-left: 1.5px solid var(--text-secondary);
+  border-bottom: 1.5px solid var(--text-secondary);
+  transform: rotate(45deg) translate(1px, -1px);
+  transition: transform 220ms ease;
+}
+
+.app.collapsed .chev { transform: rotate(-135deg) translate(1px, -1px); }
+
+/* The handle is the only part of the panel left on screen once it is shut, so
+   it is the only place a walk can announce itself from. Without this, a walk
+   planned on a phone vanishes the moment the panel is collapsed to see the
+   map -- which is precisely when you would collapse it. */
+.walk-badge {
+  position: absolute;
+  top: -7px;
+  right: -7px;
+  box-sizing: border-box;
+  min-width: 17px;
+  height: 17px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 600;
+  line-height: 17px;
+  font-variant-numeric: tabular-nums;
+  text-align: center;
+}
+
+/* White holds 5.3:1 on the light vermilion but only 3.7:1 on the dark step,
+   which is under the bar for text this small. The dark page colour on the same
+   ground gives 5.1:1, so the badge inverts rather than dimming. */
+:root[data-theme="dark"] .walk-badge { color: var(--page); }
+
+#map {
+  height: 100%;
+  width: 100%;
+  background: var(--page);
+}
+
+.leaflet-container {
+  font: inherit;
+  background: var(--page);
+}
+
+/* Seal markers. The SVG inherits the theme tokens, so switching to dark re-inks
+   every pin with no JavaScript. Leaflet's default div-icon chrome (a white box
+   with a border) has to be cleared. */
+.pin {
+  background: none;
+  border: 0;
+}
+
+.pin svg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  overflow: visible;
+  transition: transform 120ms ease;
+  transform-origin: 50% 50%;    /* symmetric mark: grow from the middle */
+}
+
+.pin .pin-body {
+  fill: var(--accent);
+  stroke: var(--pin-ring);
+  stroke-width: 1.5;
+  paint-order: stroke;          /* ring sits outside, so pins stay separable */
+}
+
+.pin .pin-mark {
+  stroke: var(--pin-ring);
+  stroke-width: 1.6;
+  fill: none;
+  stroke-linecap: round;
+}
+
+.pin:hover svg,
+.pin:focus-visible svg { transform: scale(1.18); }
+
+.pin:hover { z-index: 700 !important; }
+
+.pin:focus-visible {
+  outline: none;
+}
+
+.pin:focus-visible .pin-body {
+  stroke: var(--text-primary);
+  stroke-width: 2;
+}
+
+/* Hover label: the name, before committing to a click. */
+.leaflet-tooltip.pin-tip {
+  padding: 3px 8px;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  background: var(--surface-1);
+  color: var(--text-primary);
+  font-size: 13px;
+  font-weight: 500;
+  box-shadow: var(--shadow);
+}
+
+.leaflet-tooltip.pin-tip::before { display: none; }
+
+.leaflet-popup-content-wrapper {
+  border-radius: 10px;
+  background: var(--surface-1);
+  color: var(--text-primary);
+  box-shadow: var(--shadow);
+}
+
+.leaflet-popup-tip { background: var(--surface-1); }
+
+.leaflet-popup-content {
+  margin: 0;
+  width: 290px !important;
+  line-height: 1.5;
+}
+
+.leaflet-popup-close-button { color: var(--text-muted) !important; }
+
+.pop { padding: 14px 16px 13px; }
+
+.pop-name {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  text-transform: none;
+  color: var(--text-primary);
+}
+
+.pop-cn {
+  margin: 1px 0 0;
+  font-size: 13px;
+  color: var(--text-secondary);
+}
+
+.pop-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  margin: 9px 0 0;
+}
+
+.tag {
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: var(--wash);
+  color: var(--accent-ink);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.tag.plain {
+  background: transparent;
+  border: 1px solid var(--hairline);
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* Long notes (one runs to 957 characters) scroll rather than stretch the
+   popup off the map. */
+.pop-notes {
+  margin: 10px 0 0;
+  font-size: 13.5px;
+  color: var(--text-secondary);
+  max-height: 190px;
+  overflow-y: auto;
+}
+
+/* Credit sits directly under the quoted words, so a screenshot of the card
+   carries it too. */
+.pop-credit {
+  margin: 7px 0 0;
+  font-size: 11.5px;
+  line-height: 1.45;
+  color: var(--text-muted);
+}
+
+.pop-credit em { font-style: italic; }
+
+.pop-credit a { color: var(--accent-ink); }
+
+.foot-about { flex: none; margin-left: auto; }
+
+.pop-addr {
+  margin: 10px 0 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--hairline);
+  font-size: 12.5px;
+  color: var(--text-muted);
+}
+
+.pop-addr span { display: block; }
+
+.pop-links { margin: 9px 0 0; font-size: 12.5px; }
+
+.pop-links a { color: var(--accent-ink); }
+
+.pop-flag {
+  margin: 9px 0 0;
+  font-size: 12px;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.empty-note {
+  position: absolute;
+  z-index: 500;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 9px 14px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--surface-1);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+}
+
+.load-error {
+  margin: 0 auto;
+  max-width: 560px;
+  padding: 28px 24px;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.load-error code {
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--wash);
+  font-size: 13px;
+}
+
+@media (max-width: 760px) {
+  .app {
+    grid-template-columns: 1fr;
+    /* 50vh. At 45 the category list finished below the fold, so the primary
+       control was the one thing you had to scroll to finish reading; the city
+       switcher then took another row back. An even split is what it costs to
+       keep the whole filter visible at rest, and the map takes the entire
+       screen the moment the panel is collapsed. */
+    grid-template-rows: 50vh 1fr;
+    /* Stacked layout switches instantly rather than animating the track.
+       Transitioning grid-template-rows here proved unreliable -- the panel
+       could stick at its collapsed height on reopen -- and the sideways slide
+       the desktop gets does not read as a slide when it is vertical anyway. */
+    transition: none;
+  }
+  .app.collapsed { grid-template-columns: 1fr; grid-template-rows: 0 1fr; }
+  .panel { border-right: 0; border-bottom: 1px solid var(--hairline); }
+  .app.collapsed .panel { border-bottom-color: transparent; }
+  .app.collapsed .panel > * { width: auto; }
+
+  /* Stacked layout: the handle belongs on the top edge, pointing up. */
+  .panel-toggle {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 46px;
+    height: 22px;
+    border: 1px solid var(--border);
+    border-top: 0;
+    border-radius: 0 0 7px 7px;
+  }
+  .chev { transform: rotate(135deg) translate(1px, -1px); }
+  .app.collapsed .chev { transform: rotate(-45deg) translate(1px, -1px); }
+
+  /* The handle is on the top edge here, so the badge hangs down into the map
+     rather than up over the panel it is reporting on. */
+  .walk-badge { top: auto; bottom: -7px; right: -7px; }
+
+  /* --- density ---------------------------------------------------------
+     Measured at 390x844 before any of this: the panel gets 45vh = 380px, of
+     which the head took 131px and the footer 45px, leaving the controls a
+     202px window onto 641px of content. The category list alone was 390px, so
+     the filters, the district selector and the toggles were all below the fold
+     of a list you could not see the end of either.
+
+     The head becomes one compact row and the categories go to two columns.
+     Together that hands about 240px back. */
+  .panel-head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: baseline;
+    padding: 12px 20px 10px;
+  }
+  .panel-head h1 { grid-column: 1; grid-row: 1; font-size: 17px; }
+  .sub { grid-column: 1; grid-row: 2; font-size: 12px; }
+  .count {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    align-self: center;
+    margin: 0;
+    text-align: right;
+  }
+  .count strong { font-size: 18px; }
+
+  /* 11 categories stacked is most of the panel. Two columns fit at this width
+     -- the longest name, "Soup Dumplings", is well inside a 169px column. */
+  .cat-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 10px;
+  }
+
+  .panel-body { padding: 12px 20px 16px; }
+  .filters-head { margin-bottom: 4px; }
+
+  /* The switcher costs the panel a whole row, and at desktop proportions it
+     took 66px of a 405px panel -- enough to push the category list back below
+     the fold that the rules above just rescued it from. Name and count go on
+     one line instead of stacked, which keeps a 40px target and returns ~18px. */
+  .cities { padding: 0 20px 8px; gap: 3px; }
+  .city-btn {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 5px;
+    min-height: 40px;
+    padding: 6px 8px;
+  }
+  .city-name { font-size: 12.5px; }
+
+  /* --- touch -----------------------------------------------------------
+     iOS zooms the entire page when a form control smaller than 16px takes
+     focus, and the page never zooms back. This is the only control on the
+     page that can trigger it. */
+  #district-select {
+    font-size: 16px;
+    height: 40px;
+  }
+
+  /* These read as text links on the desktop and were 18px high, well under
+     the 44px Apple asks for. The negative margin keeps the layout identical
+     while the hit box grows. */
+  .link-btn {
+    padding: 9px 8px;
+    margin: -9px -8px;
+  }
+  .theme-btn { width: 40px; height: 40px; }
+  /* 7px gives a 34px row. Below about 32 these stop being comfortable to tap,
+     so this is the floor -- the list scrolls on a short screen rather than the
+     rows getting smaller. */
+  .cat-list label { padding: 7px 8px; }
+
+  /* The seal stays 17px. It is the map's signature and resizing it is an
+     aesthetic decision rather than a mobile fix, so the touch target grows
+     instead and the mark does not. Leaflet already positions .pin absolutely,
+     so this must not set `position` -- doing so would move every marker. */
+  .pin::after {
+    content: "";
+    position: absolute;
+    inset: -12px;
+  }
+
+  /* Popups need capping in both directions, and the first attempt got it
+     backwards: forcing `width: auto` let the content shrink-to-fit to 143px,
+     which wrapped the text into a 662px column on a 439px map. Leaflet's own
+     width is sensible, so only the ceiling is set here.
+
+     The height cap applies to every entry now that both editions quote in full
+     -- the longest is 973 characters (Da Hu Chun) and would otherwise run off
+     the map with the close button somewhere below the fold. */
+  .leaflet-popup-content {
+    max-width: 74vw;
+    max-height: 42vh;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+  }
+
+  /* The inner scroller on .pop-notes has to go here, or the two of them fight.
+     Found on an iPhone 2026-08-15: "Add to walk" could not be reached on any
+     long entry.
+
+     190px of a 354px popup was a nested scroll box sitting exactly where a
+     thumb lands, and iOS locks a gesture to the first scrollable ancestor that
+     can move -- it does not hand off to the parent mid-drag. So dragging the
+     prose scrolled the prose, the popup itself never moved, and the button
+     stayed below the fold. The only reliable grip on the outer scroller was the
+     ~75px of header above the notes.
+
+     Note the trigger was the 190px cap being *hit*, not the entry being long:
+     that happens around 300 characters, so Din Tai Fung at 775 failed exactly
+     like Da Hu Chun at 973. Removing the inner cap leaves one scroller, and one
+     drag anywhere in the popup now reaches the bottom.
+
+     Desktop keeps the cap: there is no outer 42vh there, so without it a
+     973-character entry builds a 600px+ popup that runs off the map. */
+  .pop-notes {
+    max-height: none;
+    overflow-y: visible;
+  }
+
+  /* One scroller fixes the gesture, but the action is still at the bottom of
+     ~800px of content in a 354px window. Now that every entry ships whole,
+     the primary action being buried under the prose is the normal case rather
+     than the exception, so it is pinned in view instead. Sticky resolves
+     against .leaflet-popup-content, which is the scroll container.
+
+     The negative side margins are load-bearing: .pop pads 16px, so without them
+     the bar's background stops short of the popup edge and the prose slides
+     through the gutters either side of the button. */
+  .pop-actions {
+    position: sticky;
+    bottom: 0;
+    margin: 11px -16px 0;
+    padding: 8px 16px 3px;
+    background: var(--surface-1);
+  }
+}
